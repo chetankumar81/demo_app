@@ -1,1 +1,6 @@
 POST http://127.0.0.1:3000/start_game
+
+{
+    "user1": "x1",
+    "user2": "x2"
+}
