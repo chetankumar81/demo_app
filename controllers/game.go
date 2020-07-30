@@ -139,3 +139,35 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 	return
 
 }
+
+//GetGameDetails ...
+func GetGameDetails(request events.APIGatewayProxyRequest) (response string) {
+	responseJson := util.ResponseJSON{}
+	responseJson.Code = 400
+	responseJson.Model = "Error in picking card"
+
+	gameId, ok := request.QueryStringParameters["gameId"]
+	if !ok {
+		log.Println("gameId id not present")
+		responseJson.Model = "gameId id not present"
+		return
+	}
+
+	game, err := models.GetGameById(cast.ToInt(gameId))
+	if err != nil {
+		log.Print("Error in GetGameById", err)
+		return
+	}
+
+	responseModel := make(map[string]interface{})
+	responseModel["gameId"] = game.Id
+	responseModel["user1"] = game.User1.UserName
+	responseModel["user2"] = game.User2.UserName
+	responseModel["status"] = game.Status
+
+	responseJson.Model = game
+	responseJson.Msg = "Success"
+	responseJson.Code = 200
+	response = util.GetResponseJSONInString(responseJson)
+	return
+}

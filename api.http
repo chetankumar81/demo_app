@@ -12,6 +12,9 @@ POST http://127.0.0.1:3000/pick_card
 {
     "gameId": "1",
     "user": "x1",
-    "card": "26",
+    "card": "20",
     "pickedTime": "2020-07-30 14:50:28"
 }
+
+###
+GET http://127.0.0.1:3000/game_details?gameId=1

@@ -34,5 +34,12 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 
 //GetGameDetails ...
 func GetGameDetails(request events.APIGatewayProxyRequest) (response string) {
-	return "Getting Game Details"
+	log.Print("Getting Game Details")
+	response = "Error in getting Game Details"
+	switch true {
+	case request.HTTPMethod == "GET":
+		response = controllers.GetGameDetails(request)
+	}
+
+	return
 }

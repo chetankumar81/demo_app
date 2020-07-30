@@ -48,7 +48,7 @@ func GetLast3CardValue(gameId, userId int) (v []int, err error) {
 	var a []orm.Params
 	_, err = o.Raw("SELECT cardVal from cards c inner join cardMap cm on cm.id = c.card where gameId = ? and userId = ? order by c.id desc limit 3", gameId, userId).Values(&a)
 
-	if err != nil {
+	if err != nil && err != orm.ErrNoRows {
 		return nil, err
 	}
 
