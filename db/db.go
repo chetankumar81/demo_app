@@ -49,7 +49,7 @@ func IsDbConnected(connectionName string) bool {
 func (c *Connection) Connect() error {
 
 	var err error
-	uri := "root:chetan@tcp(localhost:3306)/gl"
+	uri := "root:chetan@tcp(127.0.0.1:3306)/gl"
 	log.Print(uri)
 
 	retryCount := c.getRetryCount()
