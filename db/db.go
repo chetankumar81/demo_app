@@ -88,7 +88,7 @@ func (c *Connection) Connect() error {
 
 		//All OK !!! -> configure orm/connection with provided input
 		orm.DefaultTimeLoc, _ = time.LoadLocation(timezone)
-		orm.Debug = c.getDebugFlag()
+		orm.Debug = true //c.getDebugFlag()
 		break
 
 	}

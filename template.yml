@@ -29,7 +29,7 @@ Resources:
           Type: Api
           Properties:
             Path: /pick_card
-            Method: GET
+            Method: POST
         
         GameDetails:
           Type: Api

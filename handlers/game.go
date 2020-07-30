@@ -22,7 +22,14 @@ func StartGame(request events.APIGatewayProxyRequest) (response string) {
 
 //PickCard ... func
 func PickCard(request events.APIGatewayProxyRequest) (response string) {
-	return "Picking card"
+	log.Print("Card pick API start")
+	response = "Error in Picking card"
+
+	switch true {
+	case request.HTTPMethod == "POST":
+		response = controllers.PickCard(request)
+	}
+	return
 }
 
 //GetGameDetails ...

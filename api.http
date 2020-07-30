@@ -4,3 +4,14 @@ POST http://127.0.0.1:3000/start_game
     "user1": "x1",
     "user2": "x2"
 }
+
+####
+
+POST http://127.0.0.1:3000/pick_card
+
+{
+    "gameId": "1",
+    "user": "x1",
+    "card": "26",
+    "pickedTime": "2020-07-30 14:50:28"
+}
