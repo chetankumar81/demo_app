@@ -42,7 +42,7 @@ func AddGame(m *Game) (id int64, err error) {
 func GetGameById(id int) (v *Game, err error) {
 	o := orm.NewOrm()
 	v = &Game{Id: id}
-	if err = o.Read(v); err == nil {
+	if err = o.QueryTable(new(Game)).Filter("id", id).RelatedSel().One(v); err == nil {
 		return v, nil
 	}
 	return nil, err

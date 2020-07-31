@@ -17,4 +17,4 @@ POST http://127.0.0.1:3000/pick_card
 }
 
 ###
-GET http://127.0.0.1:3000/game_details?gameId=1
+GET http://127.0.0.1:3000/game_details?gameId=2

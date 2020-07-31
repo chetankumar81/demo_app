@@ -15,6 +15,13 @@ type Cards struct {
 	PickedTime time.Time `orm:"column(pickedTime);type(datetime);null"`
 }
 
+type PickedCards struct {
+	Id         int
+	UserId     int
+	Card       int
+	PickedTime time.Time
+}
+
 func (t *Cards) TableName() string {
 	return "cards"
 }
@@ -57,4 +64,24 @@ func GetLast3CardValue(gameId, userId int) (v []int, err error) {
 	}
 
 	return v, nil
+}
+
+//GetCardPicksByGameId ...
+func GetCardPicksByGameId(gameId int) (pickedCards []PickedCards, err error) {
+	o := orm.NewOrm()
+	var v []*Cards
+	_, err = o.QueryTable(new(Cards)).Filter("gameId", gameId).OrderBy("-id").All(&v)
+	if err == nil {
+		for _, card := range v {
+			picked := PickedCards{}
+			picked.Id = card.Id
+			picked.UserId = card.UserId.Id
+			picked.Card = card.Card.Id
+			picked.PickedTime = card.PickedTime
+			pickedCards = append(pickedCards, picked)
+
+		}
+		return pickedCards, nil
+	}
+	return nil, err
 }
