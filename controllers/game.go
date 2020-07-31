@@ -78,6 +78,7 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 	responseJson := util.ResponseJSON{}
 	responseJson.Code = 400
 	responseJson.Model = "Error in picking card"
+	response = util.GetResponseJSONInString(responseJson)
 
 	var pickCardRequest PickCardRequest
 	err := json.Unmarshal([]byte(request.Body), &pickCardRequest)
@@ -89,23 +90,29 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 	user, err := models.GetUserByuserName(pickCardRequest.User)
 	if err != nil {
 		log.Println("Error in GetUserByuserName", err)
+		responseJson.Model = "Invalid User"
+		response = util.GetResponseJSONInString(responseJson)
 		return
 	}
 	game, err := models.GetGameById(cast.ToInt(pickCardRequest.GameId))
 	if err != nil {
 		log.Println("Error in GetGameById", err)
+		responseJson.Model = "Invalid GameId"
+		response = util.GetResponseJSONInString(responseJson)
 		return
 	}
 	card, err := models.GetCardMapById(cast.ToInt(pickCardRequest.Card))
 	if err != nil {
 		log.Println("Error in GetCardMapById", err)
+		responseJson.Model = "Invalid card"
+		response = util.GetResponseJSONInString(responseJson)
 		return
 	}
 
+	flag := false
 	last3Cards, err := models.GetLast3CardValue(game.Id, user.Id)
-	if err != nil {
-		log.Println("Error in GetLast3Cards", err)
-		return
+	if err == nil && card.CardVal > last3Cards[2] && last3Cards[0] > last3Cards[1] && last3Cards[1] > last3Cards[2] {
+		flag = true
 	}
 
 	cards := &models.Cards{}
@@ -116,15 +123,10 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 
 	_, err = models.AddCards(cards)
 
-	flag := false
-	log.Println(last3Cards, card.CardVal)
-	if card.CardVal > last3Cards[2] && last3Cards[0] > last3Cards[1] && last3Cards[1] > last3Cards[2] {
-		flag = true
-	}
-
 	responseModel := make(map[string]interface{})
 	if flag {
 		game.Status = 0
+		game.Result = user.Id
 		game.Ended = time.Now()
 
 		err = models.UpdateGameById(game)
