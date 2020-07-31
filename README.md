@@ -1,4 +1,7 @@
-# demo_app
+# Online Card Game
+This Game will be played between 2 players where each player will pick the card turn by turn and the player which picks 4 increasing consequitive cards, wins the game.
+
+A = 1, J = 11, Q = 12, K = 13.
 
 ## API DETAILS
 ---
