@@ -4,7 +4,7 @@
 ---
 1. **Start Game**
 ----
-  Returns json data about the game.
+  Returns json data about whether the game started or not.
 
 * **URL**
 
@@ -55,6 +55,66 @@
         "user2": "x2"
     }
   ```
+----
+
+2. **Pick a Card**
+----
+  Returns json data about response when a player picks a card for the game.
+
+* **URL**
+
+  /pick_card
+
+* **Method:**
+
+  `POST`
+  
+*  **URL Params**
+
+    None
+
+* **Data Params**
+
+    `{
+        "gameId": "2",
+        "user": "x1",
+        "card": "26",
+        "pickedTime": "2020-07-30 14:50:28"
+    }`
+
+* **Success Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{"code":200,"msg":"success","model":{}}`
+
+    OR
+
+  * **Code:** 200 <br />
+    **Content:** `{"code":200,"msg":"success","model":{"winner":"x1"}}`
+ 
+* **Error Response:**
+
+  * **Code:** 200 <br />
+    **Content:** `{"code":400,"msg":"","model":"Invalid game / Invalid user / Invalid card"}`
+
+  OR
+
+  * **Code:** 401 UNAUTHORIZED <br />
+    **Content:** `{ error : "You are unauthorized to make this request." }`
+
+* **Sample Call:**
+
+  ```http
+    POST http://127.0.0.1:3000/pick_card
+
+    {
+        "gameId": "2",
+        "user": "x1",
+        "card": "26",
+        "pickedTime": "2020-07-30 14:50:28"
+    }
+  ```
+
 ----
 3. **Show Game Details**
 ----
