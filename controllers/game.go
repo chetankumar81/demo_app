@@ -26,8 +26,9 @@ type PickCardRequest struct {
 //StartGame ...
 func StartGame(request events.APIGatewayProxyRequest) (response string) {
 	responseJson := util.ResponseJSON{}
-	responseJson.Code = 400
-	responseJson.Model = "Error in StartGame"
+	responseJson.Code = 454
+	responseJson.Model = "Invalid Params for starting game"
+	response = util.GetResponseJSONInString(responseJson)
 
 	var startGameRequest StartGameRequest
 	err := json.Unmarshal([]byte(request.Body), &startGameRequest)
@@ -49,6 +50,15 @@ func StartGame(request events.APIGatewayProxyRequest) (response string) {
 
 	if user1 == nil || user2 == nil {
 		responseJson.Model = "Invalid userIds"
+		response = util.GetResponseJSONInString(responseJson)
+		return
+	}
+
+	isUsersAlreadyInGame, err := models.CheckUsersAlreadyInGame(user1.Id, user2.Id)
+	if err != nil || isUsersAlreadyInGame {
+		responseJson.Code = 455
+		responseJson.Model = "User1 / user2 already in game"
+		response = util.GetResponseJSONInString(responseJson)
 		return
 	}
 
@@ -63,9 +73,10 @@ func StartGame(request events.APIGatewayProxyRequest) (response string) {
 		log.Println("Error in AddGame", err)
 		return
 	}
+	game.Id = cast.ToInt(gameId)
 
 	responseModel := make(map[string]interface{})
-	responseModel["gameId"] = gameId
+	responseModel["gameDetails"] = game
 
 	responseJson.Model = responseModel
 	responseJson.Code = 200
@@ -145,13 +156,13 @@ func PickCard(request events.APIGatewayProxyRequest) (response string) {
 //GetGameDetails ...
 func GetGameDetails(request events.APIGatewayProxyRequest) (response string) {
 	responseJson := util.ResponseJSON{}
-	responseJson.Code = 400
-	responseJson.Model = "Error in picking card"
+	responseJson.Code = 404
+	responseJson.Model = "Error Game Not Found"
+	response = util.GetResponseJSONInString(responseJson)
 
 	gameId, ok := request.QueryStringParameters["gameId"]
 	if !ok {
 		log.Println("gameId id not present")
-		responseJson.Model = "gameId id not present"
 		return
 	}
 
